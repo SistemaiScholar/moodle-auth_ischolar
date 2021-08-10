@@ -29,26 +29,26 @@
  
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'iScholar Access';
+$string['pluginname'] = 'iScholar <> Moodle Authentication';
 
-$string['ischolarsettings'] = 'iScholar Access';
-$string['settings:enabled'] = 'Ativado:';
-$string['settings:enabledinfo'] = 'Ativa / desativa a integração com o iScholar.';
-$string['settings:tokenischolar'] = 'Token do iScholar:';
-$string['settings:tokenischolarinfo'] = 'Token de acesso de seu sistema iScholar. Clique <a href="https://www.ischolar.com.br/" target="_blank">aqui</a> para saber mais.';
-$string['settings:healthcheck'] = 'Status de configuração:';
+$string['ischolarsettings'] = 'iScholar <> Moodle Authentication';
+$string['settings:enabled'] = 'Enabled:';
+$string['settings:enabledinfo'] = 'Enable / disable the iScholar integration plugin.';
+$string['settings:tokenischolar'] = 'Token from iScholar:';
+$string['settings:tokenischolarinfo'] = 'Access token from your iScholar system. Click <a href="https://www.ischolar.com.br/" target="_blank">here</a> to know more.';
+$string['settings:healthcheck'] = 'Configuration status:';
 $string['settings:initialsetupinfo'] = '';
 
-$string['config:pluginenabled'] = 'Ativação do plugin.';
-$string['config:webservice'] = 'Permissão do Moodle para conexão com sistemas externos.';
-$string['config:webserviceprotocols'] = 'Protocolo de comunicação.';
-$string['config:createuser'] = 'Usuário de integração.';
-$string['config:usercapability'] = 'Permissões do usuário de integração.';
-$string['config:selectservice'] = 'Serviço iScholar.';
-$string['config:servicefunctions'] = 'Funções do serviço iScholar.';
-$string['config:serviceuser'] = 'Usuário do serviço.';
-$string['config:createtoken'] = 'Token de acesso.';
-$string['config:webservicedocs'] = 'Configuração de documentações no Moodle.';
-$string['config:servicetest'] = 'Configuração no sistema iScholar.';
-$string['config:servicetestfail'] = 'Falha na comunicação com o iScholar.';
-$string['config:manageauth'] = 'Ativando método de autenticação.';
+$string['config:pluginenabled'] = 'Plugin activation.';
+$string['config:webservice'] = 'Moodle permission to connect to external systems.';
+$string['config:webserviceprotocols'] = 'Communication protocol.';
+$string['config:createuser'] = 'Integration user.';
+$string['config:usercapability'] = 'Integration user permissions.';
+$string['config:selectservice'] = 'iScholar service.';
+$string['config:servicefunctions'] = 'iScholar service functions.';
+$string['config:serviceuser'] = 'Service user.';
+$string['config:createtoken'] = 'Access token.';
+//$string['config:webservicedocs'] = 'Documentation setup in Moodle.';
+$string['config:servicetest'] = 'Configuration in your iScholar system.';
+$string['config:servicetestfail'] = 'Communication failure to iScholar.';
+$string['config:manageauth'] = 'Authentication method activation.';

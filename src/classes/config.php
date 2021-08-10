@@ -38,6 +38,8 @@ class config {
      * plugin's internal name
      */
     const PLUGIN_ID      = 'auth_ischolar';
+    const SERVICE_NAME   = 'iScholar Access Service'
+    const SERVICE_ID     = 'ischolar_access';
     const SETTINGS_PAGE  = 'authsettingischolar';
     const PLUGIN_VERSION = '1.0.0';
     
@@ -177,11 +179,11 @@ class config {
             //
             require_once($CFG->dirroot . '/webservice/lib.php');
             $wsman      = new \webservice;
-            $service    = $wsman->get_external_service_by_shortname('ischolar_access');
+            $service    = $wsman->get_external_service_by_shortname(self::SERVICE_ID);
             if ($service == false) {                                        // Cria serviço caso não exista
                 $serviceid  = $wsman->add_external_service((object)[
-                    'name'               => 'iScholar Access',
-                    'shortname'          => 'ischolar_access',
+                    'name'               => self::SERVICE_NAME,
+                    'shortname'          => self::SERVICE_ID,
                     'enabled'            => 1,
                     'requiredcapability' => '',
                     'restrictedusers'    => true,
@@ -194,8 +196,8 @@ class config {
                 $serviceid = $service->id;
                 $wsman->update_external_service((object)[
                     'id'                 => $serviceid,
-                    'name'               => 'iScholar Access',
-                    'shortname'          => 'ischolar_access',
+                    'name'               => self::SERVICE_NAME,
+                    'shortname'          => self::SERVICE_ID,
                     'enabled'            => 1,
                     'requiredcapability' => '',
                     'restrictedusers'    => true,
@@ -212,22 +214,19 @@ class config {
             //
             // 6. Adiciona funções que o usuário poderá executar
             //
-            
-            // Create course categories
-            $wsman->add_external_function_to_service('core_course_create_categories', $serviceid);
-            // Create new courses
-            $wsman->add_external_function_to_service('core_course_create_courses', $serviceid);
-            // Return category details
-            $wsman->add_external_function_to_service('core_course_get_categories', $serviceid);
-            // Return course details
-            $wsman->add_external_function_to_service('core_course_get_courses', $serviceid);
-            // Get courses matching a specific field (id/s, shortname, idnumber, category)
-            $wsman->add_external_function_to_service('core_course_get_courses_by_field', $serviceid);
-            // Search courses by (name, module, block, tag)
-            $wsman->add_external_function_to_service('core_course_search_courses', $serviceid);
-            
-            // Retrieve users' information for a specified unique field 
-            $wsman->add_external_function_to_service('core_user_get_users_by_field', $serviceid);
+
+            $servicefunctions = [
+                'core_course_create_categories',        // Create course categories
+                'core_course_create_courses',           // Create new courses
+                'core_course_get_categories',           // Return category details
+                'core_course_get_courses',              // Return course details
+                'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
+                'core_course_search_courses',           // Search courses by (name, module, block, tag)
+                'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
+            ];
+            foreach ($servicefunctions as $function) {
+                $wsman->add_external_function_to_service($function, $serviceid);
+            }
             
             $result[6]['desc']   = 'servicefunctions';
             $result[6]['status'] = true;
@@ -285,10 +284,10 @@ class config {
             //
             // 9. Ativando Web services documentation (documentação de desenvolvedor)
             //
-            $CFG->enablewsdocumentation = 1;
-            
-            $result[9]['desc']   = 'webservicedocs';
-            $result[9]['status'] = true;
+            //$CFG->enablewsdocumentation = 1;
+            //
+            //$result[9]['desc']   = 'webservicedocs';
+            //$result[9]['status'] = true;
             
             
             //
@@ -402,6 +401,105 @@ class config {
         
         return $result;
     }
+
+    public static function helthcheck(): array {
+        global $CFG;
+        require_once($CFG->dirroot . '/user/externallib.php');
+
+        $config         = self::getsettings();
+        $ischolaruserid = NULL;
+        $serviceid      = NULL;
+
+        try {
+            $result[0]['desc'] = 'pluginenabled';
+            if ($config->enabled == '1')
+                $result[0]['status'] = true;
+            else
+                $result[0]['status'] = false;
+
+
+            $result[1]['desc'] = 'webservice';
+            if ($CFG->enablewebservices == 1) 
+                $result[1]['status'] = true;
+            else
+                $result[1]['status'] = false;
+
+            
+            $result[2]['desc'] = 'webserviceprotocols';
+            $protocols = (isset($CFG->webserviceprotocols) ? explode(',', $CFG->webserviceprotocols) : [];
+            if (array_search('rest',$protocols) !== false)
+                $result[2]['status'] = true;
+            else
+                $result[2]['status'] = false;
+
+
+            $result[3]['desc'] = 'createuser';
+            $user = \core_user_external::get_users_by_field('username', ['ischolar']);
+            $user = \external_api::clean_returnvalue(\core_user_external::get_users_by_field_returns(), $user);
+            if (count($user) > 0) {
+                $result[3]['status'] = true;
+                $ischolaruserid      = $user->id;
+            }
+            else
+                $result[3]['status'] = false;
+
+
+            $result[4]['desc'] = 'usercapability';
+            $admins = explode(',', set_config('siteadmins'));
+            if ($ischolaruserid !== NULL && array_search($ischolaruserid, $admins) !== false)
+                $result[4]['status'] = true;
+            else
+                $result[4]['status'] = false;
+
+
+            $result[5]['desc'] = 'selectservice';
+            $wsman = new \webservice;
+            $service = $wsman->get_external_service_by_shortname(self::SERVICE_ID);
+            if ($service !== false) {
+                $result[5]['status'] = true;
+                $serviceid = $service->id;
+            }
+            else
+                $result[5]['status'] = false;
+
+
+            $result[6]['desc'] = 'servicefunctions';
+            $result[6]['status'] = true;
+            $servicefunctions = [
+                'core_course_create_categories',        // Create course categories
+                'core_course_create_courses',           // Create new courses
+                'core_course_get_categories',           // Return category details
+                'core_course_get_courses',              // Return course details
+                'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
+                'core_course_search_courses',           // Search courses by (name, module, block, tag)
+                'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
+            ];
+            $externalfunctions = $wsman->get_external_functions([$serviceid]);
+            foreach ($servicefunctions as $function) {
+                if (array_search($function, $externalfunctions) === false) {
+                    $result[6]['status'] = false;
+                    break;
+                }
+            }
+
+
+            $result[7]['desc'] = 'serviceuser';
+            $authusers = $wsman->get_ws_authorised_users($serviceid);
+            $result[7]['status'] = false;
+            foreach ($authusers as $user) {
+                if ($user->firstname == 'iScholar') {
+                    $result[7]['status'] = true;
+                    break;
+                }
+            }
+
+        }
+        catch(\Exception $e) {
+            $result = $e->getMessage();
+        }
+
+        result $return;
+    }
     
     public static function callischolar($endpoint='', $payload=''): array {
         try {
@@ -463,7 +561,6 @@ class config {
         
         return $user;
     }
-    
     
     public static function debugbox($debug): void {
         $debug = var_export($debug, true);
