@@ -16,6 +16,7 @@
 
 /**
  * @package   auth_ischolar
+ * @category  authentication
  * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component	  = "auth_ischolar";     // tipo_nome
-$plugin->release      = "1.0a";			     // versão do plugin em formato legível
-$plugin->version      = 2021072200;		     // versão do plugin em formato data+contador
-$plugin->maturity     = MATURITY_BETA;	     // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
+$plugin->release      = "1.0.0";			 // versão do plugin em formato legível
+$plugin->version      = 2021081000;		     // versão do plugin em formato data+contador
+$plugin->maturity     = MATURITY_RC;	     // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
 $plugin->dependencies = [];				     // dependências

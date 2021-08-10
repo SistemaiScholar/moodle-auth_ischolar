@@ -16,8 +16,8 @@
 
 /**
  * @package   auth_ischolar
- * @category  admin
- * @copyright 2021, Walter Alexandre <walter@ischolar.com.br>
+ * @category  authentication
+ * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,33 +28,30 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     global $OUTPUT, $CFG;
 
-/*
-    $ADMIN->add(
-        'auth', 
-        new admin_category(
-            config::PLUGIN_ID.'_folder', 
-            new lang_string('pluginname', config::PLUGIN_ID)
-        )
-    );
-*/
+    // Página de configurações
     $settings = new admin_settingpage(
         config::SETTINGS_PAGE, 
         new lang_string('ischolarsettings', config::PLUGIN_ID)
     );
     
+    // Cabeçalho (topo)
     if ($ADMIN->fulltree && $_SERVER['REQUEST_URI'] == '/moodle/admin/settings.php?section='.config::SETTINGS_PAGE) {
         $settings->add(
             new admin_setting_heading(
                 config::PLUGIN_ID.'/header', 
                 '',
-                '<div style="margin:10px 0px 30px 0px; text-align:center;"><a href="https://ischolar.com.br" target="_blank">
-                    <img width="300" src="'.$OUTPUT->image_url('logo1', config::PLUGIN_ID).'" />
-                </a>
-                <h1 style="margin: 20px 0px 40px 0px;">'.new lang_string('ischolarsettings', config::PLUGIN_ID).'</h1>
+                '<div style="margin:10px 0px 30px 0px; text-align:center; 
+                        display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
+                    <a href="https://ischolar.com.br" target="_blank">
+                        <img width="300" src="'.$OUTPUT->image_url('logo1', config::PLUGIN_ID).'" />
+                    </a>
+                    <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:150%;">'
+                        .new lang_string('ischolarsettings', config::PLUGIN_ID).'</h2>
                 </div>' 
             )
         );
         
+        // Ativa / desativa
         $settings->add(
             new admin_setting_configcheckbox(
                 config::PLUGIN_ID.'/enabled', 
@@ -63,7 +60,8 @@ if ($hassiteconfig) {
                 '1', '1', '0'
             )
         );
-            
+        
+        // Token ischolar
         $settings->add(
             new admin_setting_configtextarea(
                 config::PLUGIN_ID.'/tokenischolar',
@@ -73,30 +71,9 @@ if ($hassiteconfig) {
                 PARAM_RAW,'80','8'
             )
         );
-        
-        
-    /*
-        $ADMIN->add(
-            'auth', 
-            new admin_category(
-                'ischolarfolder',
-                'iScholar'
-                false
-            )
-        );
-        
-        $ADMIN->add(
-            'ischolarfolder',
-            new admin_externalpages(
-                'ischolarsettings', 
-                lang_string('settingspage', config::PLUGIN_ID), 
-                'ischolarsettings.php', 
-                'moodle/site:config'
-            )        
-        );
-     */   
-
-        $config         = config::getsettings();
+    
+        // Status de configuração
+        $config = config::getsettings();
         if (isset($config->enabled)) {
             $healthyplugin  = '1';
             
@@ -140,9 +117,7 @@ if ($hassiteconfig) {
             );
             
             set_config('healthyplugin', $healthyplugin, config::PLUGIN_ID);
-        } 
-
+        }
     } // Fim de if admin fulltree
-//config::debugbox(config::getsettings());
     //$ADMIN->add('auth', $settings);
 }

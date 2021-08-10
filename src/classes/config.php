@@ -15,15 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   auth_ischolar
- * @copyright 2021, Walter Alexandre <walter@ischolar.com.br>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
- 
-/**
  * Integração do sistemas iScholar.
- *
- * Realiza as configurações iniciais para a integração entre sistemas iScholar e Moodle.
  *
  * @package    auth_ischolar
  * @copyright  2021 iScholar
@@ -35,18 +27,17 @@ defined('MOODLE_INTERNAL') || die();
 
 class config {
     /**
-     * plugin's internal name
+     * Plugin's constants.
      */
     const PLUGIN_ID      = 'auth_ischolar';
-    const SERVICE_NAME   = 'iScholar Access Service'
+    const SERVICE_NAME   = 'iScholar Access Service';
     const SERVICE_ID     = 'ischolar_access';
     const SETTINGS_PAGE  = 'authsettingischolar';
-    const PLUGIN_VERSION = '1.0.0';
     
-     /**
-     * Get settings for iScholar
+    /**
+     * Get the plugin configuration parameters.
      *
-     * @return object (a collection of settings parameters/values)
+     * @return object (a collection of settings parameters/values).
      */
     public static function getsettings(): object {
         $config = get_config(self::PLUGIN_ID);
@@ -55,9 +46,9 @@ class config {
     }
     
     /**
-     * Initial setup (10 steps to setup a webservice)
+     * Performs the configuration in the plugin and in the iScholar system.
      *
-     * @return bool true if success, false if failure
+     * @return array An array containing the status of configuration.
      */
     public static function setintegration(): array {
         global $CFG;
@@ -284,24 +275,18 @@ class config {
             //
             // 9. Ativando Web services documentation (documentação de desenvolvedor)
             //
-            //$CFG->enablewsdocumentation = 1;
-            //
-            //$result[9]['desc']   = 'webservicedocs';
-            //$result[9]['status'] = true;
+            $CFG->enablewsdocumentation = 1;
+            
+            $result[9]['desc']   = 'webservicedocs';
+            $result[9]['status'] = true;
             
             
             //
             // 10. Testa o serviço
             //
-            $settings    = self::getsettings();
-            
-            // HTTP_REFERER e SCRIPT_URI não funcionam no moodle.
-            // HTTP_HOST não informa se o protocolo é http ou https, então a API no ischolar terá que tentar ambos.
-            $url_moodle  = $_SERVER['HTTP_HOST']."/moodle/webservice/rest/server.php";
-
             $payload = [
                 'token_moodle' => $tokenmoodle,
-                'url_moodle'   => $url_moodle,     // "vitorhugov.sg-host.com/moodle/webservice/rest/server.php" //
+                'url_moodle'   => $CFG->wwwroot . "/webservice/rest/server.php"
             ];
             $response = self::callischolar("configura_ischolar", $payload);
 
@@ -312,7 +297,9 @@ class config {
             }
             else {
                 $result[10]['status']= false;
-                $result[10]['msg'] = (isset($response['msg'])) ? $response['msg'] : get_string('config:servicetestfail', config::PLUGIN_ID);
+                $result[10]['msg'] = (isset($response['msg'])) ? 
+                    $response['msg'] : 
+                    get_string('config:servicetestfail', config::PLUGIN_ID);
             }
             
             
@@ -349,6 +336,11 @@ class config {
         return $result;
     }
     
+    /**
+     * Disable plugin in Moodle and integration into iScholar system.
+     *
+     * @return array A array indicating the status e error message if any.
+     */
     public static function unsetintegration(): array {
         global $CFG;
         
@@ -402,6 +394,11 @@ class config {
         return $result;
     }
 
+    /**
+     * Check plugin configuration status.
+     *
+     * @return array An array containing the status of each verified configuration.
+     */
     public static function helthcheck(): array {
         global $CFG;
         require_once($CFG->dirroot . '/user/externallib.php');
@@ -411,28 +408,37 @@ class config {
         $serviceid      = NULL;
 
         try {
+            //
+            // 0. Ativação do plugin
+            //
             $result[0]['desc'] = 'pluginenabled';
             if ($config->enabled == '1')
                 $result[0]['status'] = true;
             else
                 $result[0]['status'] = false;
 
-
+            //
+            // 1. Ativação do webservice
+            //
             $result[1]['desc'] = 'webservice';
             if ($CFG->enablewebservices == 1) 
                 $result[1]['status'] = true;
             else
                 $result[1]['status'] = false;
 
-            
+            //
+            // 2. Ativação do protocolo REST
+            //
             $result[2]['desc'] = 'webserviceprotocols';
-            $protocols = (isset($CFG->webserviceprotocols) ? explode(',', $CFG->webserviceprotocols) : [];
+            $protocols = (isset($CFG->webserviceprotocols)) ? explode(',', $CFG->webserviceprotocols) : [];
             if (array_search('rest',$protocols) !== false)
                 $result[2]['status'] = true;
             else
                 $result[2]['status'] = false;
 
-
+            //
+            // 3. Usuário específico do plugin (ischolar)
+            //
             $result[3]['desc'] = 'createuser';
             $user = \core_user_external::get_users_by_field('username', ['ischolar']);
             $user = \external_api::clean_returnvalue(\core_user_external::get_users_by_field_returns(), $user);
@@ -443,7 +449,9 @@ class config {
             else
                 $result[3]['status'] = false;
 
-
+            //
+            // 4. Capacidades do usuário (verifica se usuário é administrador)
+            //
             $result[4]['desc'] = 'usercapability';
             $admins = explode(',', set_config('siteadmins'));
             if ($ischolaruserid !== NULL && array_search($ischolaruserid, $admins) !== false)
@@ -451,7 +459,9 @@ class config {
             else
                 $result[4]['status'] = false;
 
-
+            //
+            // 5. Serviço
+            //
             $result[5]['desc'] = 'selectservice';
             $wsman = new \webservice;
             $service = $wsman->get_external_service_by_shortname(self::SERVICE_ID);
@@ -462,27 +472,35 @@ class config {
             else
                 $result[5]['status'] = false;
 
-
+            //
+            // 6. Funções que o usuário pode executar
+            //
             $result[6]['desc'] = 'servicefunctions';
-            $result[6]['status'] = true;
-            $servicefunctions = [
-                'core_course_create_categories',        // Create course categories
-                'core_course_create_courses',           // Create new courses
-                'core_course_get_categories',           // Return category details
-                'core_course_get_courses',              // Return course details
-                'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
-                'core_course_search_courses',           // Search courses by (name, module, block, tag)
-                'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
-            ];
-            $externalfunctions = $wsman->get_external_functions([$serviceid]);
-            foreach ($servicefunctions as $function) {
-                if (array_search($function, $externalfunctions) === false) {
-                    $result[6]['status'] = false;
-                    break;
+            if ($serviceid !== NULL) {
+                $result[6]['status'] = true;
+                $servicefunctions = [
+                    'core_course_create_categories',        // Create course categories
+                    'core_course_create_courses',           // Create new courses
+                    'core_course_get_categories',           // Return category details
+                    'core_course_get_courses',              // Return course details
+                    'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
+                    'core_course_search_courses',           // Search courses by (name, module, block, tag)
+                    'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
+                ];
+                $externalfunctions = $wsman->get_external_functions([$serviceid]);
+                foreach ($servicefunctions as $function) {
+                    if (array_search($function, $externalfunctions) === false) {
+                        $result[6]['status'] = false;
+                        break;
+                    }
                 }
             }
+            else
+                $result[6]['status'] = false;
 
-
+            //
+            // 7. Autorização do usuário iScholar
+            //
             $result[7]['desc'] = 'serviceuser';
             $authusers = $wsman->get_ws_authorised_users($serviceid);
             $result[7]['status'] = false;
@@ -493,14 +511,74 @@ class config {
                 }
             }
 
+            //
+            // 8. Token para o usuário iScholar
+            //
+            $result[8]['desc'] = 'createtoken';
+            $tokens = $wsman->get_user_ws_tokens($ischolaruserid);
+            if (count($tokens) > 0)
+                $result[8]['status'] = true;
+            else
+                $result[8]['status'] = false;
+
+            //
+            // 9. Ativando Web services documentation (documentação de desenvolvedor)
+            //
+            $result[9]['desc'] = 'webservicedocs';
+            if ($CFG->enablewsdocumentation == 1)
+                $result[9]['status'] = true;
+            else
+                $result[9]['status'] = false;
+
+            //
+            // 10. Testa o serviço
+            //
+            $payload = [
+                'token_moodle' => $tokenmoodle,
+                'url_moodle'   => $CFG->wwwroot . "/webservice/rest/server.php"
+            ];
+            $response = self::callischolar("configura_ischolar", $payload);
+
+            $result[10]['desc'] = 'servicetest';
+            if (isset($response['status']) && $response['status'] == 'sucesso') {
+                $result[10]['status'] = true;
+                set_config('schoolcode', $response['dados']['escola'], self::PLUGIN_ID);
+            }
+            else {
+                $result[10]['status']= false;
+                $result[10]['msg'] = (isset($response['msg'])) ? $response['msg'] : get_string('config:servicetestfail', config::PLUGIN_ID);
+            }
+
+            //
+            // 11. Ativando o serviço como tipo de autenticação
+            //
+            $result[11]['desc'] = 'manageauth';
+            $result[11]['status'] = false;
+
+            if (empty($CFG->auth)) 
+                $authsenabled = array();
+            else 
+                $authsenabled = explode(',', $CFG->auth);
+
+            $auth = str_replace('auth_', '', self::PLUGIN_ID);
+            if (in_array($auth, $authsenabled)) 
+                $result[11]['status'] = true;
         }
         catch(\Exception $e) {
-            $result = $e->getMessage();
+            $result[] = [
+                'desc'   => 'exception', 
+                'status' => $e->getMessage()
+            ];
         }
 
-        result $return;
+        return $result;
     }
     
+    /**
+     * Make a call to a iScholar system.
+     *
+     * @return array A array containing the status and error messages if any.
+     */
     public static function callischolar($endpoint='', $payload=''): array {
         try {
             $settings = self::getsettings();
@@ -538,7 +616,13 @@ class config {
         return $response;
     }
     
-    public static function setuser($user = null) {
+    /* *
+     * Change the user logged on.
+     *
+     * @return object A user object.
+     */
+    /*
+    public static function setuser($user = null): object {
         global $CFG, $DB;
 
         if (is_object($user)) {
@@ -561,13 +645,19 @@ class config {
         
         return $user;
     }
-    
-    public static function debugbox($debug): void {
-        $debug = var_export($debug, true);
-        echo "<div id='debugbox' style='position:fixed; top:10px; left:10px; width:500px; background:lightgray; opacity:0.9; z-index:1000000; padding:5px; border:solid 1px black;'><pre>$debug</pre></div>";
-    }
+    */
     
     /**
+     * A small tool for debug.
+     *
+     * @param mixed $debug Some vabiable or content.
+     */
+    public static function debugbox($debug): void {
+        $debug = var_export($debug, true);
+        echo "<div id='debugbox' style='width:100%; margin-top:60px; background:lightgray; padding:5px; border:solid 1px black;'><pre>$debug</pre></div>";
+    }
+    
+    /* *
      * 
      *
      * @param int $areaid
