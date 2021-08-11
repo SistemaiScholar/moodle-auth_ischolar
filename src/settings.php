@@ -74,7 +74,7 @@ if ($hassiteconfig) {
     
         // Status de configuração
         $checkup = ischolar::healthcheck();
-        if ($checkup) {
+        if ($checkup != '') {
             $settings->add(
                 new admin_setting_description(
                     ischolar::PLUGIN_ID.'/healthcheck',

@@ -637,7 +637,7 @@ class ischolar {
             return $html;
         }
 
-        return NULL;
+        return '';
     }
 
     /**
