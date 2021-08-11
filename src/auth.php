@@ -30,7 +30,7 @@ global $CFG;
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->dirroot . '/user/externallib.php');
 
-use auth_ischolar\config;
+use auth_ischolar\ischolar;
 
 
 class auth_plugin_ischolar extends auth_plugin_base {
@@ -41,7 +41,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      */
     public function __construct() {
         $this->authtype = 'ischolar';
-        $this->config   = config::getsettings();
+        $this->config   = ischolar::getsettings();
     }
     
 
@@ -299,14 +299,14 @@ class auth_plugin_ischolar extends auth_plugin_base {
                 'token' => $_POST['token']
             ];
             
-            $response = config::callischolar('valida_token', $payload);
+            $response = ischolar::callischolar('valida_token', $payload);
             
             if (@$response['status'] == 'sucesso') {
                 $user = $DB->get_record('user', array('id' => $response['data']['id_moodle']), '*', IGNORE_MISSING);
             }
             
             if (!$user) {
-                $config = config::getsettings();
+                $config = ischolar::getsettings();
                 redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/integracao/moodle?error');
             }
         }
