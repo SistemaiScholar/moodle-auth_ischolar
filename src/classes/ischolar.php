@@ -34,6 +34,7 @@ class ischolar {
     const SERVICE_ID     = 'ischolar_auth';
     const SETTINGS_PAGE  = 'authsettingischolar';
     
+
     /**
      * Get the plugin configuration parameters.
      *
@@ -45,29 +46,24 @@ class ischolar {
         return $config;
     }
     
+
     /**
      * Performs the configuration in the plugin and in the iScholar system.
      *
      * @return array An array containing the status of configuration.
      */
-    public static function setintegration(): array {
+    public static function setintegration(): bool {
         global $CFG;
         require_once($CFG->dirroot . '/user/externallib.php');
         
         // Seguindo os passos descritos em 'Dashboard / Site administration / Server / Web services / Overview'
         try {
-            $result[0]['desc']   = 'pluginenabled';
-            $result[0]['status'] = true;
-            
             //
             // 1. Ativando webservice
             //
             set_config('enablewebservices', 1);
             
-            $result[1]['desc']   = 'webservice';
-            $result[1]['status'] = true;
 
-            
             //
             // 2. Ativando protocolo REST
             //
@@ -82,10 +78,7 @@ class ischolar {
                 }
             }
             
-            $result[2]['desc']   = 'webserviceprotocols';
-            $result[2]['status'] = true;
 
-            
             //
             // 3. Criando uusário específico (ischolar)
             //
@@ -132,9 +125,6 @@ class ischolar {
                 \core_user_external::update_users([$user1]);
             }
             
-            $result[3]['desc']   = 'createuser';
-            $result[3]['status'] = true;
-            
             
             //
             // 4. Verificando capacidades do usuário
@@ -161,9 +151,7 @@ class ischolar {
                 set_config('siteadmins', implode(',', $admins));
                 add_to_config_log('siteadmins', $logstringold, $logstringnew, 'core');
             }
-            
-            $result[4]['desc']   = 'usercapability';
-            $result[4]['status'] = true;
+
             
             //
             // 5. Selecionando um serviço
@@ -197,9 +185,6 @@ class ischolar {
                     'uploadfiles'        => true,
                 ]);
             }
-            
-            $result[5]['desc']   = 'selectservice';
-            $result[5]['status'] = true;
 
 
             //
@@ -218,9 +203,6 @@ class ischolar {
             foreach ($servicefunctions as $function) {
                 $wsman->add_external_function_to_service($function, $serviceid);
             }
-            
-            $result[6]['desc']   = 'servicefunctions';
-            $result[6]['status'] = true;
             
             
             //
@@ -245,9 +227,6 @@ class ischolar {
                 $wsman->add_ws_authorised_user($serviceuser);
             }
             
-            $result[7]['desc']   = 'serviceuser';
-            $result[7]['status'] = true;
-            
             
             //
             // 8. Cria um token para o usuário
@@ -268,17 +247,11 @@ class ischolar {
                 $tokenmoodle = end($tokens)->token;
             }
             
-            $result[8]['desc']   = 'createtoken';
-            $result[8]['status'] = true;
-            
             
             //
             // 9. Ativando Web services documentation (documentação de desenvolvedor)
             //
             set_config('enablewsdocumentation', 1);
-            
-            $result[9]['desc']   = 'webservicedocs';
-            $result[9]['status'] = true;
             
             
             //
@@ -290,17 +263,8 @@ class ischolar {
             ];
             $response = self::callischolar("configura_ischolar", $payload);
 
-            $result[10]['desc'] = 'servicetest';
-            if (isset($response['status']) && $response['status'] == 'sucesso') {
-                $result[10]['status'] = true;
+            if (isset($response['status']) && $response['status'] == 'sucesso')
                 set_config('schoolcode', $response['dados']['escola'], self::PLUGIN_ID);
-            }
-            else {
-                $result[10]['status']= false;
-                $result[10]['msg'] = (isset($response['msg'])) ? 
-                    $response['msg'] : 
-                    get_string('config:servicetestfail', ischolar::PLUGIN_ID);
-            }
             
             
             //
@@ -324,18 +288,15 @@ class ischolar {
 
             \core\session\manager::gc();                            // Remove stale sessions.
             \core_plugin_manager::reset_caches();
-            
-            $result[11]['desc']   = 'manageauth';
-            $result[11]['status'] = true;
-            
-            
-        } catch (\Exception $e) {
-            $result = $e->getMessage();
+        } 
+        catch (\Exception $e) {
+            return false;
         }
         
-        return $result;
+        return true;
     }
     
+
     /**
      * Disable plugin in Moodle and integration into iScholar system.
      *
@@ -393,6 +354,7 @@ class ischolar {
         
         return $result;
     }
+
 
     /**
      * Check plugin configuration status.
@@ -640,6 +602,7 @@ class ischolar {
         return '';
     }
 
+
     /**
      * Make a call to a iScholar system.
      *
@@ -682,12 +645,12 @@ class ischolar {
         return $response;
     }
     
+
     /* *
      * Change the user logged on.
      *
      * @return object A user object.
      */
-    /*
     public static function setuser($user = null): object {
         global $CFG, $DB;
 
@@ -711,8 +674,9 @@ class ischolar {
         
         return $user;
     }
-    */
+
     
+
     /**
      * A small tool for debug.
      *
@@ -729,6 +693,7 @@ class ischolar {
         </div>";
     }
     
+
     /* *
      * 
      *
