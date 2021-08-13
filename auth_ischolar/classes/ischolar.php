@@ -608,7 +608,7 @@ class ischolar {
      *
      * @return array A array containing the status and error messages if any.
      */
-    public static function callischolar($endpoint='', $payload=''): array {
+    public static function callischolar($endpoint='', $payload='') {
         try {
             $settings = self::getsettings();
             
