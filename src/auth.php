@@ -290,7 +290,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *  Hook for overriding behaviour of login page. 
      */
     function loginpage_hook() {
-        global $DB;
+        global $DB, $CFG;
         
         $user = false;
         
@@ -313,7 +313,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
 
         if ($user !== false) {
             complete_user_login($user);
-            redirect('/moodle/my');
+            redirect($CFG->wwwroot.'/my');
         }
     }
     

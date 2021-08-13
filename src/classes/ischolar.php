@@ -259,7 +259,7 @@ class ischolar {
             //
             $payload = [
                 'token_moodle' => $tokenmoodle,
-                'url_moodle'   => $CFG->wwwroot . "/webservice/rest/server.php"
+                'url_moodle'   => $CFG->wwwroot,
             ];
             $response = self::callischolar("configura_ischolar", $payload);
 

@@ -43,9 +43,9 @@ if ($hassiteconfig) {
                 '<div style="margin:10px 0px 30px 0px; text-align:center; 
                         display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
                     <a href="https://ischolar.com.br" target="_blank">
-                        <img width="300" src="'.$OUTPUT->image_url('logo1', ischolar::PLUGIN_ID).'" />
+                        <img width="250" src="'.$OUTPUT->image_url('logo1', ischolar::PLUGIN_ID).'" />
                     </a>
-                    <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:150%;">'
+                    <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:140%;">'
                         .new lang_string('ischolarsettings', ischolar::PLUGIN_ID).'</h2>
                 </div>' 
             )
