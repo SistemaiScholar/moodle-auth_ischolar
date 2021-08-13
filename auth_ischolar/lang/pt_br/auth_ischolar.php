@@ -35,7 +35,7 @@ $string['ischolarsettings'] = 'Autenticação iScholar <> Moodle';
 $string['settings:enabled'] = 'Ativado:';
 $string['settings:enabledinfo'] = 'Ativa / desativa a integração com o iScholar.';
 $string['settings:tokenischolar'] = 'Token do iScholar:';
-$string['settings:tokenischolarinfo'] = 'Token de acesso de seu sistema iScholar. Clique <a href="https://www.ischolar.com.br/" target="_blank">aqui</a> para saber mais.';
+$string['settings:tokenischolarinfo'] = 'Token de acesso de seu sistema iScholar. Clique <a href="https://ajuda.ischolar.com.br/pt-BR/articles/5491781-autenticacao-ischolar-moodle" target="_blank">aqui</a> para saber mais.';
 $string['settings:healthcheck'] = 'Status de configuração:';
 $string['settings:initialsetupinfo'] = '';
 $string['settings:userlastname'] = 'Integrações';

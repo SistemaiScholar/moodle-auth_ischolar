@@ -35,7 +35,7 @@ $string['ischolarsettings'] = 'iScholar <> Moodle Authentication';
 $string['settings:enabled'] = 'Enabled:';
 $string['settings:enabledinfo'] = 'Enable / disable the iScholar integration plugin.';
 $string['settings:tokenischolar'] = 'Token from iScholar:';
-$string['settings:tokenischolarinfo'] = 'Access token from your iScholar system. Click <a href="https://www.ischolar.com.br/" target="_blank">here</a> to know more.';
+$string['settings:tokenischolarinfo'] = 'Access token from your iScholar system. Click <a href="https://ajuda.ischolar.com.br/pt-BR/articles/5491781-autenticacao-ischolar-moodle" target="_blank">here</a> to know more.';
 $string['settings:healthcheck'] = 'Configuration status:';
 $string['settings:initialsetupinfo'] = '';
 $string['settings:userlastname'] = 'Integrations';
