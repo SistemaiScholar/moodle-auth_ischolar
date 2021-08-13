@@ -1,0 +1,62 @@
+/*
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+ * general tool specific CSS rules
+ *
+ * @package     auth_ischolar
+ *
+ * @copyright   2021, iScholar Gestão Escolar
+ * @author      iScholar
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
+
+#id_s_auth_ischolar_enabled {
+    cursor: pointer;
+    scale: 1.5;
+    margin-right: 10px;
+}
+
+#id_s_auth_ischolar_tokenischolar {
+    resize: none;
+}
+
+.settingsform h2:first-of-type, div.form-defaultinfo, span.form-shortname  {
+    display: none !important;
+}
+
+div.form-label {
+    font-weight: bold !important;
+}
+
+div.form-description  {
+    color: #333333 !important;
+    margin: 0px 0px 20px 0px !important;
+    width: 100%;
+}
+
+div.form-item {
+    margin-bottom: 15px;
+}
+
+div.form-checkbox, div.form-description {
+    display: inline;
+}
+div.form-checkbox {
+    margin-top: 0px !important;
+}
+div.form-description p {
+    display: inline-block;
+}
