@@ -511,7 +511,7 @@ class ischolar {
                 'token_moodle' => $tokenmoodle,
                 'url_moodle'   => $CFG->wwwroot . "/webservice/rest/server.php"
             ];
-            $response = self::callischolar("configura_ischolar", $payload);
+            $response = self::callischolar("configura_moodle_auth", $payload);
 
             $results[10]['desc'] = 'servicetest';
             if (isset($response['status']) && $response['status'] == 'sucesso') {
