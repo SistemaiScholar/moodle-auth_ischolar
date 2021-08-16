@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component	  = "auth_ischolar";     // tipo_nome
 $plugin->release      = "1.0.0";			 // versão do plugin em formato legível
-$plugin->version      = 2021081300;		     // versão do plugin em formato data+contador
+$plugin->version      = 2021081600;		     // versão do plugin em formato data+contador
 $plugin->maturity     = MATURITY_STABLE;	 // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
 $plugin->dependencies = [];				     // dependências

@@ -261,7 +261,7 @@ class ischolar {
                 'token_moodle' => $tokenmoodle,
                 'url_moodle'   => $CFG->wwwroot,
             ];
-            $response = self::callischolar("configura_ischolar", $payload);
+            $response = self::callischolar("configura_moodle_auth", $payload);
 
             if (isset($response['status']) && $response['status'] == 'sucesso')
                 set_config('schoolcode', $response['dados']['escola'], self::PLUGIN_ID);
@@ -310,7 +310,7 @@ class ischolar {
             // Desativando integração no iScholar
             //
             
-            $response = self::callischolar("desativa_integracao");
+            $response = self::callischolar("desativa_moodle_auth");
 
             if (isset($result['status']) && $result['status'] == 'sucesso')
                 $result['status'] = true;
