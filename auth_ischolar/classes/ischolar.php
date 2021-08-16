@@ -29,10 +29,14 @@ class ischolar {
     /**
      * Plugin's constants.
      */
-    const PLUGIN_ID      = 'auth_ischolar';
-    const SERVICE_NAME   = 'iScholar Authentication';
-    const SERVICE_ID     = 'ischolar_auth';
-    const SETTINGS_PAGE  = 'authsettingischolar';
+    const PLUGIN_ID         = 'auth_ischolar';
+    const SERVICE_NAME      = 'iScholar Authentication';
+    const SERVICE_ID        = 'ischolar_auth';
+    const SETTINGS_PAGE     = 'authsettingischolar';
+    const SERVICE_FUNCTIONS = [
+        'core_course_get_categories',           // Return category details
+        'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
+    ];
     
 
     /**
@@ -190,17 +194,7 @@ class ischolar {
             //
             // 6. Adiciona funções que o usuário poderá executar
             //
-
-            $servicefunctions = [
-                'core_course_create_categories',        // Create course categories
-                'core_course_create_courses',           // Create new courses
-                'core_course_get_categories',           // Return category details
-                'core_course_get_courses',              // Return course details
-                'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
-                'core_course_search_courses',           // Search courses by (name, module, block, tag)
-                'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
-            ];
-            foreach ($servicefunctions as $function) {
+            foreach (self::SERVICE_FUNCTIONS as $function) {
                 $wsman->add_external_function_to_service($function, $serviceid);
             }
             
@@ -442,15 +436,6 @@ class ischolar {
             $results[6]['desc'] = 'servicefunctions';
             if ($serviceid !== NULL) {
                 $results[6]['status'] = true;
-                $servicefunctions = [
-                    'core_course_create_categories',        // Create course categories
-                    'core_course_create_courses',           // Create new courses
-                    'core_course_get_categories',           // Return category details
-                    'core_course_get_courses',              // Return course details
-                    'core_course_get_courses_by_field',     // Get courses matching a specific field (id/s, shortname, idnumber, category)
-                    'core_course_search_courses',           // Search courses by (name, module, block, tag)
-                    'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field
-                ];
 
                 $externalfunctions     = $wsman->get_external_functions([$serviceid]);
                 $externalfunctionnames = [];
@@ -459,12 +444,11 @@ class ischolar {
                 }
 
                 $results[6]['status'] = true;
-                foreach ($servicefunctions as $function) {
+                foreach (self::SERVICE_FUNCTIONS as $function) {
                     if (in_array($function, $externalfunctionnames) == false) {
                         $results[6]['status'] = false;
                         break;
                     }
-                        
                 }
             }
             else
