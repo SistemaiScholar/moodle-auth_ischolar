@@ -242,8 +242,7 @@ class ischolar {
             //
             $payload = [
                 'token_moodle' => $tokenmoodle,
-                'url_moodle'   => $CFG->wwwroot,
-                'origem'       => self::PLUGIN_ID
+                'url_moodle'   => $CFG->wwwroot
             ];
             $response = self::callischolar("configura_moodle_auth", $payload);
 
@@ -487,8 +486,7 @@ class ischolar {
             //
             $payload = [
                 'token_moodle' => $tokenmoodle,
-                'url_moodle'   => $CFG->wwwroot,
-                'origem'       => self::PLUGIN_ID
+                'url_moodle'   => $CFG->wwwroot
             ];
             $response = self::callischolar("configura_moodle_auth", $payload);
 

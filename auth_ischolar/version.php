@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component    = "auth_ischolar";     // Tipo_nome.
 $plugin->release      = "1.0.0";             // Versão do plugin em formato legível.
-$plugin->version      = 2021083001;          // Versão do plugin em formato data+contador.
+$plugin->version      = 2021083002;          // Versão do plugin em formato data+contador.
 $plugin->maturity     = MATURITY_STABLE;     // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE.
 $plugin->dependencies = [];                  // Dependências.
 $plugin->requires     = 2015051100;          // Specifies the minimum version number of Moodle core that this plugin requires.

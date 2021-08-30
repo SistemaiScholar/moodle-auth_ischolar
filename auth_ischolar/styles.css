@@ -36,16 +36,16 @@
 .settingsform h2:first-of-type,
 div.form-defaultinfo,
 span.form-shortname {
-    display: none;
+    display: none!important;
 }
 
 div.form-label {
-    font-weight: bold;
+    font-weight: bold!important;
 }
 
 div.form-description {
-    color: #333;
-    margin: 0px 0px 20px 0px;
+    color: #333!important;
+    margin: 0px 0px 20px 0px!important;
     width: 100%;
 }
 
@@ -55,7 +55,7 @@ div.form-item {
 
 div.form-checkbox,
 div.form-description {
-    display: inline;
+    display: inline!important;
 }
 div.form-checkbox {
     margin-top: 0px;
