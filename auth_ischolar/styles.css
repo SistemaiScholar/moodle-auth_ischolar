@@ -33,17 +33,19 @@
     resize: none;
 }
 
-.settingsform h2:first-of-type, div.form-defaultinfo, span.form-shortname  {
-    display: none !important;
+.settingsform h2:first-of-type,
+div.form-defaultinfo,
+span.form-shortname {
+    display: none;
 }
 
 div.form-label {
-    font-weight: bold !important;
+    font-weight: bold;
 }
 
-div.form-description  {
-    color: #333333 !important;
-    margin: 0px 0px 20px 0px !important;
+div.form-description {
+    color: #333;
+    margin: 0px 0px 20px 0px;
     width: 100%;
 }
 
@@ -51,11 +53,12 @@ div.form-item {
     margin-bottom: 15px;
 }
 
-div.form-checkbox, div.form-description {
+div.form-checkbox,
+div.form-description {
     display: inline;
 }
 div.form-checkbox {
-    margin-top: 0px !important;
+    margin-top: 0px;
 }
 div.form-description p {
     display: inline-block;

@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version file
+ *
  * @package   auth_ischolar
- * @category  authentication
  * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// https://docs.moodle.org/dev/version.php
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component	  = "auth_ischolar";     // tipo_nome
-$plugin->release      = "1.0.0";			 // versão do plugin em formato legível
-$plugin->version      = 2021081600;		     // versão do plugin em formato data+contador
-$plugin->maturity     = MATURITY_STABLE;	 // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
-$plugin->dependencies = [];				     // dependências
+$plugin->component    = "auth_ischolar";     // Tipo_nome.
+$plugin->release      = "1.0.0";             // Versão do plugin em formato legível.
+$plugin->version      = 2021083001;          // Versão do plugin em formato data+contador.
+$plugin->maturity     = MATURITY_STABLE;     // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE.
+$plugin->dependencies = [];                  // Dependências.
+$plugin->requires     = 2015051100;          // Specifies the minimum version number of Moodle core that this plugin requires.

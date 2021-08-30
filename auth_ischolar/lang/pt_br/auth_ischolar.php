@@ -26,7 +26,7 @@
  * @author      iScholar Gestão Escolar
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Autenticação iScholar <> Moodle';
@@ -55,7 +55,6 @@ $string['config:servicetest'] = 'Configuração no sistema iScholar.';
 $string['config:servicetestfail'] = 'Falha na comunicação com o iScholar.';
 $string['config:manageauth'] = 'Ativação do método de autenticação.';
 $string['config:plugindisabled'] = 'Plugin desativado.';
-//$string['config:exception'] = 'Exceção.';
 
 $string['configerror:general'] = 'Falha na comunicação com o iScholar:';
 $string['configerror:communication'] = 'O iScholar não conseguiu estabelecer comunicação com o Moodle.';

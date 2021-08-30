@@ -15,19 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * To be implemented on future
+ *
  * @package   auth_ischolar
- * @category  authentication
  * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 /*
-	The interface between the Moodle core and the plugin is defined here for the most plugin types. 
-	The expected contents of the file depends on the particular plugin type.
+    The interface between the Moodle core and the plugin is defined here for the most plugin types.
+    The expected contents of the file depends on the particular plugin type.
 
-	Moodle core often (but not always) loads all the lib.php files of the given plugin types. 
-	For the performance reasons, it is strongly recommended to keep this file as small as possible and 
-	have just required code implemented in it. All the plugin's internal logic should be implemented in the auto-loaded classes.
+    Moodle core often (but not always) loads all the lib.php files of the given plugin types.
+    For the performance reasons, it is strongly recommended to keep this file as small as possible and
+    have just required code implemented in it. All the plugin's internal logic should be implemented in the auto-loaded classes.
 
-	All functions defined in this file must meet the requirements set out in the relevant section of the Coding style 
+    All functions defined in this file must meet the requirements set out in the relevant section of the Coding style
 */
+defined('MOODLE_INTERNAL') || die();

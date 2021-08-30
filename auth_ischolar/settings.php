@@ -15,8 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Settings page
+ *
  * @package   auth_ischolar
- * @category  authentication
  * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,51 +29,51 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     global $OUTPUT, $CFG;
 
-    // Página de configurações
+    // Página de configurações.
     $settings = new admin_settingpage(
-        ischolar::SETTINGS_PAGE, 
+        ischolar::SETTINGS_PAGE,
         new lang_string('ischolarsettings', ischolar::PLUGIN_ID)
     );
-    
-    // Cabeçalho (topo)
+
+    // Cabeçalho (topo).
     if ($ADMIN->fulltree && isset($_GET['section']) && $_GET['section'] == ischolar::SETTINGS_PAGE) {
         $settings->add(
             new admin_setting_heading(
-                ischolar::PLUGIN_ID.'/header', 
+                ischolar::PLUGIN_ID.'/header',
                 '',
-                '<div style="margin:10px 0px 30px 0px; text-align:center; 
+                '<div style="margin:10px 0px 30px 0px; text-align:center;
                         display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
                     <a href="https://ischolar.com.br" target="_blank">
                         <img width="250" src="'.$OUTPUT->image_url('logo1', ischolar::PLUGIN_ID).'" />
                     </a>
                     <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:140%;">'
                         .new lang_string('ischolarsettings', ischolar::PLUGIN_ID).'</h2>
-                </div>' 
+                </div>'
             )
         );
-        
-        // Ativa / desativa
+
+        // Ativa / desativa.
         $settings->add(
             new admin_setting_configcheckbox(
-                ischolar::PLUGIN_ID.'/enabled', 
-                get_string('settings:enabled', ischolar::PLUGIN_ID), 
+                ischolar::PLUGIN_ID.'/enabled',
+                get_string('settings:enabled', ischolar::PLUGIN_ID),
                 get_string('settings:enabledinfo', ischolar::PLUGIN_ID),
                 '1', '1', '0'
             )
         );
-        
-        // Token ischolar
+
+        // Token ischolar.
         $settings->add(
             new admin_setting_configtextarea(
                 ischolar::PLUGIN_ID.'/tokenischolar',
                 get_string('settings:tokenischolar', ischolar::PLUGIN_ID),
                 get_string('settings:tokenischolarinfo', ischolar::PLUGIN_ID),
                 '',
-                PARAM_RAW,'80','8'
+                PARAM_RAW, '80', '8'
             )
         );
-    
-        // Status de configuração
+
+        // Status de configuração.
         $checkup = ischolar::healthcheck();
         if ($checkup != '') {
             $settings->add(
@@ -84,21 +85,21 @@ if ($hassiteconfig) {
             );
         }
 
-        // Se o usuário clicou no botão para resetar as configurações
+        // Se o usuário clicou no botão para resetar as configurações.
         if (isset($_GET['fix']) && $_GET['fix'] == 1) {
             ischolar::setintegration();
             redirect($_SERVER['SCRIPT_NAME'].'?section='.ischolar::SETTINGS_PAGE);
         }
 
-        // Se o usuário clicou no botão de salvar configurações
-        if ($data = data_submitted() and confirm_sesskey() and 
+        // Se o usuário clicou no botão de salvar configurações.
+        if ($data = data_submitted() and confirm_sesskey() and
                 isset($data->action) and $data->action == 'save-settings') {
-            if ($data->s_auth_ischolar_enabled == '1')
+            if ($data->s_auth_ischolar_enabled == '1') {
                 ischolar::setintegration();
-            else
+            } else {
                 ischolar::unsetintegration();
+            }
         }
 
-    } // Fim de if admin fulltree
-    //$ADMIN->add('auth', $settings);
+    } // Fim de if admin fulltree.
 }
