@@ -30,12 +30,24 @@ defined('MOODLE_INTERNAL') || die();
  */
 class ischolar {
     /**
-     * Plugin's constants.
+     * @var string PLUGIN_ID Plugin id.
      */
-    const PLUGIN_ID         = 'auth_ischolar';              // Plugin id.
-    const SERVICE_NAME      = 'iScholar Authentication';    // Service name.
-    const SERVICE_ID        = 'ischolar_auth';              // Service id.
-    const SETTINGS_PAGE     = 'authsettingischolar';        // Settings page.
+    const PLUGIN_ID         = 'auth_ischolar';
+    /**
+     * @var string SERVICE_NAME Service name.
+     */
+    const SERVICE_NAME      = 'iScholar Authentication';
+    /**
+     * @var string SERVICE_ID Service id.
+     */
+    const SERVICE_ID        = 'ischolar_auth';
+    /**
+     * @var string SETTINGS_PAGE Settings page.
+     */
+    const SETTINGS_PAGE     = 'authsettingischolar';
+    /**
+     *  @var string SERVICE_FUNCTIONS Functions executed by the service.
+     */
     const SERVICE_FUNCTIONS = [
         'core_course_get_categories',           // Return category details.
         'core_user_get_users_by_field',         // Retrieve users' information for a specified unique field.
@@ -585,7 +597,8 @@ class ischolar {
 
     /**
      * Make a call to a iScholar system.
-     *
+     * @param string $endpoint Api endpoint to call.
+     * @param string $payload Data to be sent.
      * @return array A array containing the status and error messages if any.
      */
     public static function callischolar($endpoint='', $payload='') {
@@ -628,7 +641,7 @@ class ischolar {
 
     /**
      * Change the user logged on.
-     *
+     * @param int $user User id.
      * @return object A user object.
      */
     public static function setuser($user = null): object {
@@ -660,6 +673,7 @@ class ischolar {
      * A small tool for debug.
      *
      * @param mixed $debug Some vabiable or content.
+     * @param mixed $title Title of the debug box.
      */
     public static function debugbox($debug, $title=null): void {
         $debug = var_export($debug, true);

@@ -167,7 +167,21 @@ class auth_plugin_ischolar extends auth_plugin_base {
 
             if (!$user) {
                 $config = ischolar::getsettings();
-                redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/integracao/moodle?error');
+                
+                switch ($_POST['origem']) {
+                    case 'painel':
+                        redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/integracao/moodle?error');
+                        break;
+                        
+                    case 'app':
+                        redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/erro/?e=eyJvcmlnZW0iOiJtb29kbGVfYXV0aCJ9');
+                        break;
+                        
+                    default:
+                        redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/erro/?e=eyJvcmlnZW0iOiJtb29kbGVfYXV0aCJ9');
+                        break;
+                }
+                
             }
         }
 
