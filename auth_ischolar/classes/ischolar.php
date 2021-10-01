@@ -232,16 +232,26 @@ class ischolar {
             //
             $ischolaruser = \core_user_external::get_users_by_field('username', ['ischolar']);
             $tokens       = $wsman->get_user_ws_tokens($ischolaruser[0]['id']);
-            // Se token não existe, será criado.
-            if (count($tokens) == 0) {
+            $found        = false;
+
+            foreach ($tokens as $token) {           // Procurando token.
+                if ($token->name == 'iScholar Authentication') {
+                    if ($token->enabled != '1') {   // Token inválida é removida.
+                        delete_user_ws_token($token->id);
+                    } else {
+                        $found       = true;
+                        $tokenmoodle = $token->token;
+                    }
+                }
+            }
+
+            if ($found == false) {                  // Se token não existe, será criado.
                 $tokenmoodle = external_generate_token(
                     EXTERNAL_TOKEN_PERMANENT,
                     $serviceid,
                     $ischolaruser[0]['id'],
                     \context_system::instance()
                 );
-            } else {                                    // Se token existe, apenas busca o token.
-                $tokenmoodle = end($tokens)->token;
             }
 
             //
@@ -474,13 +484,16 @@ class ischolar {
             //
             // 8. Token para o usuário iScholar
             //
-            $results[8]['desc'] = 'createtoken';
-            $tokens = $wsman->get_user_ws_tokens($ischolaruserid);
-            if (count($tokens) > 0) {
-                $results[8]['status'] = true;
-                $tokenmoodle = end($tokens)->token;
-            } else {
-                $results[8]['status'] = false;
+            $results[8]['desc']     = 'createtoken';
+            $tokens                 = $wsman->get_user_ws_tokens($ischolaruserid);
+            $results[8]['status']   = false;
+            $tokenmoodle            = '';
+            foreach ($tokens as $token) {
+                if ($token->name == 'iScholar Authentication' && $token->enabled == '1') {
+                    $results[8]['status']   = true;
+                    $tokenmoodle            = $token->token;
+                    break;
+                }
             }
 
             //
@@ -564,7 +577,7 @@ class ischolar {
                         $html .= '</p>';
                     }
 
-                    if ($result['status'] == false) {
+                    if ($result['status'] == false && $i != 10) {   // Ignora checks que botão de corrigir não resolve.
                         $healthyplugin = 0;
                     }
                 }
