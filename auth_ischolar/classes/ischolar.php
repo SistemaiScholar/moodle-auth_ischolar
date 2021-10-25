@@ -59,7 +59,7 @@ class ischolar {
      *
      * @return object (a collection of settings parameters/values).
      */
-    public static function getsettings(): object {
+    public static function getsettings(): \stdClass {
         $config = get_config(self::PLUGIN_ID);
 
         return $config;
@@ -380,7 +380,7 @@ class ischolar {
             // 0. Ativação do plugin
             //
             $results[0]['desc'] = 'pluginenabled';
-            if ($config->enabled == '1') {
+            if (isset($config->enabled) && $config->enabled == '1') {
                 $results[0]['status'] = true;
             } else {
                 $results[0]['status'] = false;
