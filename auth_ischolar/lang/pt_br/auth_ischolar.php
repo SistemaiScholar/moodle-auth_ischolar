@@ -30,6 +30,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Autenticação iScholar <> Moodle';
+$string['privacy:metadata'] = 'O plugin Autenticação iScholar <> Moodle não armazena nenhum dado pessoal.';
 
 $string['ischolarsettings'] = 'Autenticação iScholar <> Moodle';
 $string['settings:enabled'] = 'Ativado:';
