@@ -75,15 +75,15 @@ class ischolar {
         global $CFG;
         require_once($CFG->dirroot . '/user/externallib.php');
 
-        // Seguindo os passos descritos em 'Dashboard / Site administration / Server / Web services / Overview'.
+        // Following the steps described in 'Site administration / Server / Web services / Overview'.
         try {
             //
-            // 1. Ativando webservice
+            // 1. Activating webservice.
             //
             set_config('enablewebservices', 1);
 
             //
-            // 2. Ativando protocolo REST
+            // 2. Activating REST protocol.
             //
             if (!isset($CFG->webserviceprotocols) || $CFG->webserviceprotocols == '') {
                 set_config('webserviceprotocols', 'rest');
@@ -96,14 +96,14 @@ class ischolar {
             }
 
             //
-            // 3. Criando uusário específico (ischolar)
+            // 3. Creating specific user (ischolar).
             //
 
-            // Busca usuário ischolar.
+            // Search user ischolar.
             $user = \core_user_external::get_users_by_field('username', ['ischolar']);
             $user = \external_api::clean_returnvalue(\core_user_external::get_users_by_field_returns(), $user);
 
-            // Se usuário ischolar não existe, será criado.
+            // If ischolar user does not exist, it will be created.
             if (count($user) == 0) {
                 $user1 = array(
                     'username'    => 'ischolar',
@@ -114,17 +114,17 @@ class ischolar {
                     'email'       => 'suporte@ischolar.com.br',
                     'description' => get_string('settings:userdescription', self::PLUGIN_ID),
                 );
-                if ($CFG->version >= 2018120300) {   // Se versão do moodle for 3.6 ou posterior.
+                if ($CFG->version >= 2018120300) {   // If moodle version is 3.6 or later.
                     $user1['maildisplay'] = 0;
                 }
                 $user = \core_user_external::create_users([$user1]);
                 $user = \external_api::clean_returnvalue(\core_user_external::create_users_returns(), $user);
 
-                // Altera usuário (moodle não permite criar usuários de webservice, mas permite alterar o usuário para webservice).
+                // Change user (moodle does not allow creating webservice users, but allows changing the user to webservice).
                 $user1['id']   = $user[0]['id'];
                 $user1['auth'] = 'webservice';
                 $user          = \core_user_external::update_users([$user1]);
-            } else {    // Se usuário já existe, é resetado.
+            } else {    // If user already exists, it is reset.
                 $ischolaruser = \core_user_external::get_users_by_field('username', ['ischolar']);
                 $user1 = array(
                     'id'          => $ischolaruser[0]['id'],
@@ -137,15 +137,15 @@ class ischolar {
                     'email'       => 'suporte@ischolar.com.br',
                     'description' => get_string('settings:userdescription', self::PLUGIN_ID),
                 );
-                if ($CFG->version >= 2018120300) {   // Se versão do moodle for 3.6 ou posterior.
+                if ($CFG->version >= 2018120300) {   // If moodle version is 3.6 or later.
                     $user1['maildisplay'] = '0';
                 }
                 \core_user_external::update_users([$user1]);
             }
 
             //
-            // 4. Verificando capacidades do usuário
-            // Coloca o usuário ischolar no grupo de administradores.
+            // 4. Checking User Capabilities.
+            // Puts the ischolar user in the admins group.
             //
             $potentialadmisselector = new \core_role_admins_potential_selector();
             $ischolar               = $potentialadmisselector->find_users('iScholar');
@@ -161,21 +161,21 @@ class ischolar {
                         $admins[$admin] = $admin;
                     }
                 }
-                $logstringold        = implode(', ', $admins);      // Log antes.
-                $admins[$idischolar] = $idischolar;                 // Alteração.
-                $logstringnew        = implode(', ', $admins);      // Log depois.
+                $logstringold        = implode(', ', $admins);      // Log before.
+                $admins[$idischolar] = $idischolar;                 // Change.
+                $logstringnew        = implode(', ', $admins);      // Log after.
 
                 set_config('siteadmins', implode(',', $admins));
                 add_to_config_log('siteadmins', $logstringold, $logstringnew, 'core');
             }
 
             //
-            // 5. Selecionando um serviço
+            // 5. Selecting a service.
             //
             require_once($CFG->dirroot . '/webservice/lib.php');
             $wsman      = new \webservice;
             $service    = $wsman->get_external_service_by_shortname(self::SERVICE_ID);
-            if ($service == false) {                                        // Cria serviço caso não exista.
+            if ($service == false) {                                        // Create service if it does not exist.
                 $serviceid  = $wsman->add_external_service((object)[
                     'name'               => self::SERVICE_NAME,
                     'shortname'          => self::SERVICE_ID,
@@ -186,7 +186,7 @@ class ischolar {
                     'downloadfiles'      => true,
                     'uploadfiles'        => true,
                 ]);
-            } else {                                                       // Se serviço já existe, reseta os parâmetros.
+            } else {                                                       // If service already exists, reset parameters.
                 $serviceid = $service->id;
                 $wsman->update_external_service((object)[
                     'id'                 => $serviceid,
@@ -202,17 +202,17 @@ class ischolar {
             }
 
             //
-            // 6. Adiciona funções que o usuário poderá executar.
+            // 6. Add functions that the user can perform.
             //
             foreach (self::SERVICE_FUNCTIONS as $function) {
                 $wsman->add_external_function_to_service($function, $serviceid);
             }
 
             //
-            // 7. Adiciona usuário ischolar como usuário autorizado.
+            // 7. Add ischolar user as authorized user.
             //
 
-            // Verificando se usuário já está autorizado.
+            // Checking if user is already authorized.
             $authusers  = $wsman->get_ws_authorised_users($serviceid);
             $found      = false;
             foreach ($authusers as $user) {
@@ -221,7 +221,7 @@ class ischolar {
                     break;
                 }
             }
-            // Se não está, autoriza.
+            // If not, authorize.
             if ($found == false) {
                 $ischolaruser = \core_user_external::get_users_by_field('username', ['ischolar']);
                 $serviceuser = new \stdClass();
@@ -231,15 +231,15 @@ class ischolar {
             }
 
             //
-            // 8. Cria um token para o usuário
+            // 8. Create a token for the user.
             //
             $ischolaruser = \core_user_external::get_users_by_field('username', ['ischolar']);
             $tokens       = $wsman->get_user_ws_tokens($ischolaruser[0]['id']);
             $found        = false;
 
-            foreach ($tokens as $token) {           // Procurando token.
+            foreach ($tokens as $token) {           // Searching the token.
                 if ($token->name == 'iScholar Authentication') {
-                    if ($token->enabled != '1') {   // Token inválida é removida.
+                    if ($token->enabled != '1') {   // Invalid token is removed.
                         delete_user_ws_token($token->id);
                     } else {
                         $found       = true;
@@ -248,7 +248,7 @@ class ischolar {
                 }
             }
 
-            if ($found == false) {                  // Se token não existe, será criado.
+            if ($found == false) {                  // If token does not exist, it will be created.
                 $tokenmoodle = external_generate_token(
                     EXTERNAL_TOKEN_PERMANENT,
                     $serviceid,
@@ -258,12 +258,12 @@ class ischolar {
             }
 
             //
-            // 9. Ativando Web services documentation (documentação de desenvolvedor)
+            // 9. Activating Web services documentation (developer documentation).
             //
             set_config('enablewsdocumentation', 1);
 
             //
-            // 10. Testa o serviço
+            // 10. test the service.
             //
             $payload = [
                 'token_moodle' => $tokenmoodle,
@@ -276,7 +276,7 @@ class ischolar {
             }
 
             //
-            // 11. Ativando o serviço como tipo de autenticação
+            // 11. Enabling the service as an authentication type.
             //
             get_enabled_auth_plugins(true);                         // Fix the list of enabled auths.
             if (empty($CFG->auth)) {
@@ -314,7 +314,7 @@ class ischolar {
 
         try {
             //
-            // Desativando integração no iScholar.
+            // Disabling iScholar integration.
             //
 
             $response = self::callischolar("desativa_moodle_auth");
@@ -326,7 +326,7 @@ class ischolar {
             }
 
             //
-            // Desativando serviço de autenticação no moodle.
+            // Disabling authentication service in moodle.
             //
             get_enabled_auth_plugins(true);                         // Fix the list of enabled auths.
             if (empty($CFG->auth)) {
@@ -380,7 +380,7 @@ class ischolar {
 
         try {
             //
-            // 0. Ativação do plugin
+            // 0. Plugin Activation.
             //
             $results[0]['desc'] = 'pluginenabled';
             if (isset($config->enabled) && $config->enabled == '1') {
@@ -390,7 +390,7 @@ class ischolar {
             }
 
             //
-            // 1. Ativação do webservice
+            // 1. Webservice activation.
             //
             $results[1]['desc'] = 'webservice';
             if ($CFG->enablewebservices == 1) {
@@ -400,7 +400,7 @@ class ischolar {
             }
 
             //
-            // 2. Ativação do protocolo REST
+            // 2. REST protocol activation.
             //
             $results[2]['desc'] = 'webserviceprotocols';
             $protocols = (isset($CFG->webserviceprotocols)) ? explode(',', $CFG->webserviceprotocols) : [];
@@ -411,7 +411,7 @@ class ischolar {
             }
 
             //
-            // 3. Usuário específico do plugin (ischolar)
+            // 3. Plugin specific user (ischolar).
             //
             $results[3]['desc'] = 'createuser';
             $user = \core_user_external::get_users_by_field('username', ['ischolar']);
@@ -424,7 +424,7 @@ class ischolar {
             }
 
             //
-            // 4. Capacidades do usuário (verifica se usuário é administrador)
+            // 4. User capabilities (verifies user is an administrator).
             //
             $results[4]['desc'] = 'usercapability';
             $admins = explode(',', $CFG->siteadmins);
@@ -435,7 +435,7 @@ class ischolar {
             }
 
             //
-            // 5. Serviço
+            // 5. Service.
             //
             $results[5]['desc'] = 'selectservice';
             $wsman = new \webservice;
@@ -448,7 +448,7 @@ class ischolar {
             }
 
             //
-            // 6. Funções que o usuário pode executar
+            // 6. Functions that the user can perform.
             //
             $results[6]['desc'] = 'servicefunctions';
             if ($serviceid !== null) {
@@ -472,7 +472,7 @@ class ischolar {
             }
 
             //
-            // 7. Autorização do usuário iScholar
+            // 7. iScholar User Authorization.
             //
             $results[7]['desc'] = 'serviceuser';
             $authusers = $wsman->get_ws_authorised_users($serviceid);
@@ -485,7 +485,7 @@ class ischolar {
             }
 
             //
-            // 8. Token para o usuário iScholar
+            // 8. Token for iScholar user.
             //
             $results[8]['desc']     = 'createtoken';
             $tokens                 = $wsman->get_user_ws_tokens($ischolaruserid);
@@ -500,7 +500,7 @@ class ischolar {
             }
 
             //
-            // 9. Ativando Web services documentation (documentação de desenvolvedor)
+            // 9. Activating Web services documentation (developer documentation).
             //
             $results[9]['desc'] = 'webservicedocs';
             if ($CFG->enablewsdocumentation == 1) {
@@ -510,7 +510,7 @@ class ischolar {
             }
 
             //
-            // 10. Testa o serviço
+            // 10. test the service.
             //
             $payload = [
                 'token_moodle' => $tokenmoodle,
@@ -529,7 +529,7 @@ class ischolar {
             }
 
             //
-            // 11. Ativando o serviço como tipo de autenticação
+            // 11. Enabling the service as an authentication type.
             //
             $results[11]['desc'] = 'manageauth';
             $results[11]['status'] = false;
@@ -552,14 +552,14 @@ class ischolar {
         }
 
         //
-        // Exibindo resultado em html.
+        // Displaying result in html.
         //
         $config = self::getsettings();
         if (isset($config->enabled)) {
             $healthyplugin  = 1;
 
             if ($config->enabled == '1') {
-                if ($CFG->version < 2016120500) {   // Se versão do moodle é anterior a 3.2.
+                if ($CFG->version < 2016120500) {   // If moodle version is older than 3.2.
                     $html  = '<div style="background-color:#eeeeee; border:solid 1px #8f959e; padding:8px; width:530px;">';
                 } else {
                     $html  = '<div style="background-color:#eeeeee; border:solid 1px #8f959e; padding:8px;">';
@@ -568,7 +568,7 @@ class ischolar {
                     $html .= '<p style="display:flex; flex-direction:row; justify-content:space-between; '.
                                 'align-items:center; color:#333333;">';
                     $html .= '<span>'.get_string('config:'.$result['desc'], self::PLUGIN_ID).'</span>';
-                    if ($CFG->version < 2017051500) {   // Se versão do Moodle for anterior a 3.3.
+                    if ($CFG->version < 2017051500) {   // If Moodle version is older than 3.3.
                         $html .= ($result['status']) ?
                             '<img style="width:20px; height:20px; margin:0px 10px;" src="'.
                                 $CFG->wwwroot.'/auth/ischolar/pix/yes.png" />' :
@@ -592,7 +592,7 @@ class ischolar {
                         $html .= '</p>';
                     }
 
-                    if ($result['status'] == false && $i != 10) {   // Ignora checks que botão de corrigir não resolve.
+                    if ($result['status'] == false && $i != 10) {   // Ignore checks that the fix button doesn't solve.
                         $healthyplugin = 0;
                     }
                 }

@@ -29,15 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     global $OUTPUT, $CFG;
 
-    // Página de configurações.
+    // Settings page.
     $settings = new admin_settingpage(
         ischolar::SETTINGS_PAGE,
         new lang_string('ischolarsettings', ischolar::PLUGIN_ID)
     );
 
-    // Cabeçalho (topo).
+    // Header (top).
     if ($ADMIN->fulltree && isset($_GET['section']) && $_GET['section'] == ischolar::SETTINGS_PAGE) {
-        if ($CFG->version < 2017051500) {  // Se versão do moodle for anterior a 3.3.
+        if ($CFG->version < 2017051500) {  // If the version of moodle is older than 3.3.
             $settings->add(
                 new admin_setting_heading(
                     ischolar::PLUGIN_ID.'/header',
@@ -69,7 +69,7 @@ if ($hassiteconfig) {
             );
         }
 
-        // Ativa / desativa.
+        // Enable / Disable.
         $settings->add(
             new admin_setting_configcheckbox(
                 ischolar::PLUGIN_ID.'/enabled',
@@ -79,7 +79,7 @@ if ($hassiteconfig) {
             )
         );
 
-        // Token ischolar.
+        // Ischolar token.
         $settings->add(
             new admin_setting_configtextarea(
                 ischolar::PLUGIN_ID.'/tokenischolar',
@@ -90,10 +90,10 @@ if ($hassiteconfig) {
             )
         );
 
-        // Status de configuração.
+        // Configuration status.
         $checkup = ischolar::healthcheck();
         if ($checkup != '') {
-            if ((int) $CFG->version < 2018120300) {     // Se versão do Moodle está abaixo de 3.6.
+            if ((int) $CFG->version < 2018120300) {     // If Moodle version is under 3.6.
                 $settings->add(
                     new admin_setting_configempty (
                         ischolar::PLUGIN_ID.'/healthcheck',
@@ -112,13 +112,13 @@ if ($hassiteconfig) {
             }
         }
 
-        // Se o usuário clicou no botão para resetar as configurações.
+        // If the user clicked the button to reset the settings.
         if (isset($_GET['fix']) && $_GET['fix'] == 1) {
             ischolar::setintegration();
             redirect($_SERVER['SCRIPT_NAME'].'?section='.ischolar::SETTINGS_PAGE);
         }
 
-        // Se o usuário clicou no botão de salvar configurações.
+        // If the user clicked the save settings button.
         if ($data = data_submitted() and confirm_sesskey() and
                 isset($data->action) and $data->action == 'save-settings') {
             if ($data->s_auth_ischolar_enabled == '1') {
@@ -128,8 +128,8 @@ if ($hassiteconfig) {
             }
         }
 
-        // Fim de if admin fulltree.
-    } else if ($CFG->version < 2016052300 && $ADMIN->fulltree) {      // Para versão 3.0 ou anterior.
+        // End of if admin fulltree.
+    } else if ($CFG->version < 2016052300 && $ADMIN->fulltree) {      // For version 3.0 or earlier.
         if ($data = data_submitted() and confirm_sesskey() and
                 isset($data->section) and $data->section == ischolar::SETTINGS_PAGE) {
             set_config('enabled', $data->s_auth_ischolar_enabled, ischolar::PLUGIN_ID);
