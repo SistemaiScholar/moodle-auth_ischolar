@@ -65,7 +65,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      * @param string $password The password
      * @return bool Authentication success or failure.
      */
-    public function user_login ($username, $password):bool {
+    public function user_login ($username, $password) {
         global $DB;
 
         $user = $DB->get_record('user', array('username' => $username), '*', IGNORE_MISSING);
@@ -83,7 +83,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function can_change_password():bool {
+    public function can_change_password() {
         return false;
     }
 
@@ -93,7 +93,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function can_edit_profile():bool {
+    public function can_edit_profile() {
         return false;
     }
 
@@ -104,7 +104,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function is_internal():bool {
+    public function is_internal() {
         return false;
     }
 
@@ -114,7 +114,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function is_configured():bool {
+    public function is_configured() {
         return isset($this->config->enabled) &&
             $this->config->enabled == '1' &&
             $this->config->healthyplugin == '1';
@@ -129,7 +129,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function prevent_local_passwords():bool {
+    public function prevent_local_passwords() {
         return false;
     }
 
@@ -141,7 +141,7 @@ class auth_plugin_ischolar extends auth_plugin_base {
      *
      * @return bool
      */
-    public function is_synchronised_with_external():bool {
+    public function is_synchronised_with_external() {
         return false;
     }
 
@@ -167,21 +167,17 @@ class auth_plugin_ischolar extends auth_plugin_base {
 
             if (!$user) {
                 $config = ischolar::getsettings();
-                
                 switch ($_POST['origem']) {
                     case 'painel':
                         redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/integracao/moodle?error');
                         break;
-                        
                     case 'app':
                         redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/erro/?e=eyJvcmlnZW0iOiJtb29kbGVfYXV0aCJ9');
                         break;
-                        
                     default:
                         redirect('https://'.$config->schoolcode.'.paineldoaluno.com.br/erro/?e=eyJvcmlnZW0iOiJtb29kbGVfYXV0aCJ9');
                         break;
                 }
-                
             }
         }
 

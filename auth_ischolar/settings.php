@@ -37,20 +37,37 @@ if ($hassiteconfig) {
 
     // Cabeçalho (topo).
     if ($ADMIN->fulltree && isset($_GET['section']) && $_GET['section'] == ischolar::SETTINGS_PAGE) {
-        $settings->add(
-            new admin_setting_heading(
-                ischolar::PLUGIN_ID.'/header',
-                '',
-                '<div style="margin:10px 0px 30px 0px; text-align:center;
-                        display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
-                    <a href="https://ischolar.com.br" target="_blank">
-                        <img width="250" src="'.$OUTPUT->image_url('logo1', ischolar::PLUGIN_ID).'" />
-                    </a>
-                    <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:140%;">'
-                        .new lang_string('ischolarsettings', ischolar::PLUGIN_ID).'</h2>
-                </div>'
-            )
-        );
+        if ($CFG->version < 2017051500) {  // Se versão do moodle for anterior a 3.3.
+            $settings->add(
+                new admin_setting_heading(
+                    ischolar::PLUGIN_ID.'/header',
+                    '',
+                    '<div style="margin:10px 0px 30px 0px; text-align:center;
+                            display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
+                        <a href="https://ischolar.com.br" target="_blank">
+                            <img width="250" src="'.$CFG->wwwroot.'/auth/ischolar/pix/logo1.png" />
+                        </a>
+                        <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:140%;">'
+                            .new lang_string('ischolarsettings', ischolar::PLUGIN_ID).'</h2>
+                    </div>'
+                )
+            );
+        } else {
+            $settings->add(
+                new admin_setting_heading(
+                    ischolar::PLUGIN_ID.'/header',
+                    '',
+                    '<div style="margin:10px 0px 30px 0px; text-align:center;
+                            display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
+                        <a href="https://ischolar.com.br" target="_blank">
+                            <img width="250" src="'.$OUTPUT->image_url('logo1', ischolar::PLUGIN_ID).'" />
+                        </a>
+                        <h2 style="margin:0px 0px 0px 10px; display:inline-block !important; font-size:140%;">'
+                            .new lang_string('ischolarsettings', ischolar::PLUGIN_ID).'</h2>
+                    </div>'
+                )
+            );
+        }
 
         // Ativa / desativa.
         $settings->add(
@@ -76,13 +93,23 @@ if ($hassiteconfig) {
         // Status de configuração.
         $checkup = ischolar::healthcheck();
         if ($checkup != '') {
-            $settings->add(
-                new admin_setting_description(
-                    ischolar::PLUGIN_ID.'/healthcheck',
-                    get_string('settings:healthcheck', ischolar::PLUGIN_ID),
-                    $checkup
-                )
-            );
+            if ((int) $CFG->version < 2018120300) {     // Se versão do Moodle está abaixo de 3.6.
+                $settings->add(
+                    new admin_setting_configempty (
+                        ischolar::PLUGIN_ID.'/healthcheck',
+                        get_string('settings:healthcheck', ischolar::PLUGIN_ID),
+                        $checkup
+                    )
+                );
+            } else {
+                $settings->add(
+                    new admin_setting_description(
+                        ischolar::PLUGIN_ID.'/healthcheck',
+                        get_string('settings:healthcheck', ischolar::PLUGIN_ID),
+                        $checkup
+                    )
+                );
+            }
         }
 
         // Se o usuário clicou no botão para resetar as configurações.
@@ -101,5 +128,20 @@ if ($hassiteconfig) {
             }
         }
 
-    } // Fim de if admin fulltree.
+        // Fim de if admin fulltree.
+    } else if ($CFG->version < 2016052300 && $ADMIN->fulltree) {      // Para versão 3.0 ou anterior.
+        if ($data = data_submitted() and confirm_sesskey() and
+                isset($data->section) and $data->section == ischolar::SETTINGS_PAGE) {
+            set_config('enabled', $data->s_auth_ischolar_enabled, ischolar::PLUGIN_ID);
+            set_config('tokenischolar', $data->s_auth_ischolar_tokenischolar, ischolar::PLUGIN_ID);
+
+            if ($data->s_auth_ischolar_enabled == '1') {
+                ischolar::setintegration();
+                header("Location: settings.php?section=".ischolar::SETTINGS_PAGE);
+            } else {
+                ischolar::unsetintegration();
+                header("Location: settings.php?section=".ischolar::SETTINGS_PAGE);
+            }
+        }
+    }
 }

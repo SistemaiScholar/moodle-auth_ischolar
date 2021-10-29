@@ -39,7 +39,7 @@ $string['settings:tokenischolarinfo'] = 'Token de acesso de seu sistema iScholar
 $string['settings:healthcheck'] = 'Status de configuração:';
 $string['settings:initialsetupinfo'] = '';
 $string['settings:userlastname'] = 'Integrações';
-$string['settings:userdescription'] = 'NÃO ALTERE E NÃO REMOVA ESTE USUÁRIO! A alteração ou remoção deste usuário acarretará no mal funcionamento de plugins iScholar.';
+$string['settings:userdescription'] = 'NÃO ALTERE E NÃO REMOVA ESTE USUÁRIO! A alteração ou remoção deste usuário acarretará no mal funcionamento em plugins do iScholar.';
 
 $string['config:pluginenabled'] = 'Ativação do plugin.';
 $string['config:webservice'] = 'Permissão do Moodle para conexão com sistemas externos.';

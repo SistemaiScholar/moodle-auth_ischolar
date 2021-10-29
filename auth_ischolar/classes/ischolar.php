@@ -59,7 +59,7 @@ class ischolar {
      *
      * @return object (a collection of settings parameters/values).
      */
-    public static function getsettings(): \stdClass {
+    public static function getsettings() {
         $config = get_config(self::PLUGIN_ID);
 
         return $config;
@@ -71,7 +71,7 @@ class ischolar {
      *
      * @return array An array containing the status of configuration.
      */
-    public static function setintegration(): bool {
+    public static function setintegration() {
         global $CFG;
         require_once($CFG->dirroot . '/user/externallib.php');
 
@@ -111,10 +111,12 @@ class ischolar {
                     'idnumber'    => 'ischolar',
                     'firstname'   => 'iScholar',
                     'lastname'    => get_string('settings:userlastname', self::PLUGIN_ID),
-                    'email'       => 'walter@ischolar.com.br',
-                    'maildisplay' => 0,
+                    'email'       => 'suporte@ischolar.com.br',
                     'description' => get_string('settings:userdescription', self::PLUGIN_ID),
                 );
+                if ($CFG->version >= 2018120300) {   // Se versão do moodle for 3.6 ou posterior.
+                    $user1['maildisplay'] = 0;
+                }
                 $user = \core_user_external::create_users([$user1]);
                 $user = \external_api::clean_returnvalue(\core_user_external::create_users_returns(), $user);
 
@@ -131,12 +133,13 @@ class ischolar {
                     'password'    => '1Sch0lar@2021',
                     'idnumber'    => 'ischolar',
                     'firstname'   => 'iScholar',
-                    'lastname'    => 'Integrações',
-                    'email'       => 'walter@ischolar.com.br',
-                    'maildisplay' => 0,
-                    'description' => 'NÃO ALTERE E NÃO REMOVA ESTE USUÁRIO. A alteração ou remoção '.
-                                     'deste usuário acarretará no mal funcionamento da integração iScholar.',
+                    'lastname'    => get_string('settings:userlastname', self::PLUGIN_ID),
+                    'email'       => 'suporte@ischolar.com.br',
+                    'description' => get_string('settings:userdescription', self::PLUGIN_ID),
                 );
+                if ($CFG->version >= 2018120300) {   // Se versão do moodle for 3.6 ou posterior.
+                    $user1['maildisplay'] = '0';
+                }
                 \core_user_external::update_users([$user1]);
             }
 
@@ -306,7 +309,7 @@ class ischolar {
      *
      * @return array A array indicating the status e error message if any.
      */
-    public static function unsetintegration(): array {
+    public static function unsetintegration() {
         global $CFG;
 
         try {
@@ -365,7 +368,7 @@ class ischolar {
      *
      * @return array An array containing the status of each verified configuration.
      */
-    public static function healthcheck(): string {
+    public static function healthcheck() {
         global $CFG, $OUTPUT;
         require_once($CFG->dirroot . '/user/externallib.php');
         require_once($CFG->dirroot . '/webservice/lib.php');
@@ -556,16 +559,28 @@ class ischolar {
             $healthyplugin  = 1;
 
             if ($config->enabled == '1') {
-                $html  = '<div style="background-color:#eeeeee; border:solid 1px #8f959e; padding:8px;">';
+                if ($CFG->version < 2016120500) {   // Se versão do moodle é anterior a 3.2.
+                    $html  = '<div style="background-color:#eeeeee; border:solid 1px #8f959e; padding:8px; width:530px;">';
+                } else {
+                    $html  = '<div style="background-color:#eeeeee; border:solid 1px #8f959e; padding:8px;">';
+                }
                 foreach ($results as $i => $result) {
                     $html .= '<p style="display:flex; flex-direction:row; justify-content:space-between; '.
                                 'align-items:center; color:#333333;">';
                     $html .= '<span>'.get_string('config:'.$result['desc'], self::PLUGIN_ID).'</span>';
-                    $html .= ($result['status']) ?
-                        '<img style="width:20px; height:20px; margin:0px 10px;" src="'.
-                            $OUTPUT->image_url('yes', self::PLUGIN_ID).'" />' :
-                        '<img style="width:22px; height:22px; margin:0px 10px;" src="'.
-                            $OUTPUT->image_url('no', self::PLUGIN_ID).'" />';
+                    if ($CFG->version < 2017051500) {   // Se versão do Moodle for anterior a 3.3.
+                        $html .= ($result['status']) ?
+                            '<img style="width:20px; height:20px; margin:0px 10px;" src="'.
+                                $CFG->wwwroot.'/auth/ischolar/pix/yes.png" />' :
+                            '<img style="width:22px; height:22px; margin:0px 10px;" src="'.
+                                $CFG->wwwroot.'/auth/ischolar/pix/no.png" />';
+                    } else {
+                        $html .= ($result['status']) ?
+                            '<img style="width:20px; height:20px; margin:0px 10px;" src="'.
+                                $OUTPUT->image_url('yes', self::PLUGIN_ID).'" />' :
+                            '<img style="width:22px; height:22px; margin:0px 10px;" src="'.
+                                $OUTPUT->image_url('no', self::PLUGIN_ID).'" />';
+                    }
                     $html .= '</p>';
 
                     if (isset($result['msg'])) {
@@ -657,7 +672,7 @@ class ischolar {
      * @param int $user User id.
      * @return object A user object.
      */
-    public static function setuser($user = null): object {
+    public static function setuser($user = null) {
         global $CFG, $DB;
 
         if (is_object($user)) {
@@ -688,7 +703,7 @@ class ischolar {
      * @param mixed $debug Some vabiable or content.
      * @param mixed $title Title of the debug box.
      */
-    public static function debugbox($debug, $title=null): void {
+    public static function debugbox($debug, $title=null) {
         $debug = var_export($debug, true);
         $title = ($title !== null) ?
             "<p style='color:white; background:#333333; margin:0px; padding:5px;'><strong>{$title}</strong></p>" :
