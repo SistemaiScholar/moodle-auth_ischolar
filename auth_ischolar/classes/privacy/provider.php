@@ -20,8 +20,11 @@
  * @copyright  2021, iScholar - Gestão Escolar
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace auth_ischolar\privacy;
+
 defined('MOODLE_INTERNAL') || die();
+
 /**
  * Privacy Subsystem for auth_ischolar implementing null_provider.
  *
