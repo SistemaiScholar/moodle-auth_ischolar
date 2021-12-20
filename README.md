@@ -46,7 +46,7 @@ After the procedure described above, you will have installed the plugin. Now it 
 * Back in your Moodle site, in the `Site Administration` screen, `Plugins`, click on the `iScholar <> Moodle Authentication` plugin link to access the settings page.
 ![Image-8](https://github.com/SistemaiScholar/moodle-auth_ischolar/blob/main/docs/image8.png)
 
-* In the plugin settings screen that opens (figure below), check the `Enabled` option, paste the copied token into the text box of the `Token from iScholar` field and click `Save changes`. 
+* In the plugin settings screen that opens (figure below), check the `Enabled` option, enter your iScholar `School code`, paste the copied token into the text box of the `Token from iScholar` field and click `Save changes`. 
 ![Image-9](https://github.com/SistemaiScholar/moodle-auth_ischolar/blob/main/docs/image9.png)
 
 Following the above procedure the plugin will automatically configure both Moodle and iScholar systems. To check the configuration status and ensure its correctness, simply access this plugin configuration page again. At the bottom of the page you should see something like the following figure: 
