@@ -15,18 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version file
+ * To be implemented on future
  *
  * @package   auth_ischolar
  * @copyright 2021, iScholar - Gestão Escolar
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+/*
+    The interface between the Moodle core and the plugin is defined here for the most plugin types.
+    The expected contents of the file depends on the particular plugin type.
 
-$plugin->component    = "auth_ischolar";     // Type_name.
-$plugin->release      = "1.0.0";             // Plugin version in readable format.
-$plugin->version      = 2021111700;          // Plugin version in date+counter format.
-$plugin->maturity     = MATURITY_STABLE;     // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE.
-$plugin->dependencies = [];                  // Dependencies.
-$plugin->requires     = 2015111600;          // Specifies the minimum version number of Moodle core that this plugin requires.
+    Moodle core often (but not always) loads all the lib.php files of the given plugin types.
+    For the performance reasons, it is strongly recommended to keep this file as small as possible and
+    have just required code implemented in it. All the plugin's internal logic should be implemented in the auto-loaded classes.
+
+    All functions defined in this file must meet the requirements set out in the relevant section of the Coding style
+*/
+defined('MOODLE_INTERNAL') || die();

@@ -79,6 +79,16 @@ if ($hassiteconfig) {
             )
         );
 
+        // School code.
+        $settings->add(
+            new admin_setting_configtext(
+                ischolar::PLUGIN_ID.'/schoolcode',
+                new lang_string('settings:schoolcode', ischolar::PLUGIN_ID),
+                new lang_string('settings:schoolcodeinfo', ischolar::PLUGIN_ID),
+                '', PARAM_RAW, 59
+            )
+        );
+
         // Ischolar token.
         $settings->add(
             new admin_setting_configtextarea(
@@ -133,6 +143,7 @@ if ($hassiteconfig) {
         if ($data = data_submitted() and confirm_sesskey() and
                 isset($data->section) and $data->section == ischolar::SETTINGS_PAGE) {
             set_config('enabled', $data->s_auth_ischolar_enabled, ischolar::PLUGIN_ID);
+            set_config('schoolcode', $data->s_auth_ischolar_schoolcode, ischolar::PLUGIN_ID);
             set_config('tokenischolar', $data->s_auth_ischolar_tokenischolar, ischolar::PLUGIN_ID);
 
             if ($data->s_auth_ischolar_enabled == '1') {

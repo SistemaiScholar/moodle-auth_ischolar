@@ -41,6 +41,8 @@ $string['settings:healthcheck'] = 'Status de configuração:';
 $string['settings:initialsetupinfo'] = '';
 $string['settings:userlastname'] = 'Integrações';
 $string['settings:userdescription'] = 'NÃO ALTERE E NÃO REMOVA ESTE USUÁRIO! A alteração ou remoção deste usuário acarretará no mal funcionamento em plugins do iScholar.';
+$string['settings:schoolcode']  = 'Código da escola:';
+$string['settings:schoolcodeinfo'] = 'Código da escola no iScholar.';
 
 $string['config:pluginenabled'] = 'Ativação do plugin.';
 $string['config:webservice'] = 'Permissão do Moodle para conexão com sistemas externos.';
@@ -62,6 +64,7 @@ $string['configerror:communication'] = 'O iScholar não conseguiu estabelecer co
 $string['configerror:tokeninvalido'] = 'O Token do iScholar fornecido é inválido para esta aplicação.';
 $string['configerror:tokenexpirado'] = 'O Token do iScholar fornecido expirou. Acesse seu iScholar para gerar um novo token.';
 $string['configerror:escoladesconhecida'] = 'A escola associada ao Token do iScholar é desconhecida.';
+$string['configerror:escolainvalida'] = 'A escola associada ao Token do iScholar é diferente do Código da escola fornecido.';
 $string['configerror:integracaodesconhecida'] = 'A integração associada ao Token do iScholar fornecido é desconhecida.';
 $string['configerror:tokennaoencontrado'] = 'Token do iScholar não encontrado.';
 $string['configerror:fixbutton'] = 'Corrigir configurações';

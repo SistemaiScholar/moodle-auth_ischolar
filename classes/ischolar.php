@@ -271,10 +271,6 @@ class ischolar {
             ];
             $response = self::callischolar("configura_moodle_auth", $payload);
 
-            if (isset($response['status']) && $response['status'] == 'sucesso') {
-                set_config('schoolcode', $response['dados']['escola'], self::PLUGIN_ID);
-            }
-
             //
             // 11. Enabling the service as an authentication type.
             //
@@ -521,7 +517,6 @@ class ischolar {
             $results[10]['desc'] = 'servicetest';
             if (isset($response['status']) && $response['status'] == 'sucesso') {
                 $results[10]['status'] = true;
-                set_config('schoolcode', $response['dados']['escola'], self::PLUGIN_ID);
             } else {
                 $results[10]['status'] = false;
                 $results[10]['msg'] = (isset($response['msg'])) ? $response['msg'] :
