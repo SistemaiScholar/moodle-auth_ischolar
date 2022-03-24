@@ -103,11 +103,22 @@ class ischolar {
             $user = \core_user_external::get_users_by_field('username', ['ischolar']);
             $user = \external_api::clean_returnvalue(\core_user_external::get_users_by_field_returns(), $user);
 
+            $payload = [
+                'plugin'  => self::PLUGIN_ID,
+                'usuario' => 'ischolar'
+            ];
+            $response = self::callischolar("gerador_senha", $payload);
+            if (isset($response['status']) && $response['status'] == 'sucesso') {
+                $password = $response['dados'];
+            } else {
+                throw new \Exception("passgenerror");
+            }
+
             // If ischolar user does not exist, it will be created.
             if (count($user) == 0) {
                 $user1 = array(
                     'username'    => 'ischolar',
-                    'password'    => '1Sch0lar@2021',
+                    'password'    => $password,
                     'idnumber'    => 'ischolar',
                     'firstname'   => 'iScholar',
                     'lastname'    => get_string('settings:userlastname', self::PLUGIN_ID),
@@ -130,7 +141,7 @@ class ischolar {
                     'id'          => $ischolaruser[0]['id'],
                     'auth'        => 'webservice',
                     'username'    => 'ischolar',
-                    'password'    => '1Sch0lar@2021',
+                    'password'    => $password,
                     'idnumber'    => 'ischolar',
                     'firstname'   => 'iScholar',
                     'lastname'    => get_string('settings:userlastname', self::PLUGIN_ID),
